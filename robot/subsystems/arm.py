@@ -143,3 +143,4 @@ class Arm:
 
         self._mech_lower.setAngle(238 + math.degrees(self.get_lower_position()))
         self._mech_upper.setAngle(180 - math.degrees(self.get_upper_position()))
+

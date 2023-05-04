@@ -1,6 +1,7 @@
 import wpimath
 from wpilib import TimedRobot, XboxController
 
+from robot import auto
 from robot.subsystems.arm import Arm, ArmPosition
 from robot.subsystems.drivetrain import Drivetrain
 from robot.subsystems.claw import Claw
@@ -44,8 +45,8 @@ class Robot(TimedRobot):
         self.arm.periodic()
         self.drivetrain.periodic()
 
-    def autoInit(self):
-        pass
+    def autonomousInit(self):
+        auto.run_auto(auto.COMMAND, self)
 
-    def autoPeriodic(self):
-        pass
+    def autonomousPeriodic(self):
+        self.arm.periodic()

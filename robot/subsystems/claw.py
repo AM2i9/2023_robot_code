@@ -11,3 +11,9 @@ class Claw:
 
     def toggle(self):
         self._solenoid.toggle()
+    
+    def close(self):
+        self._solenoid.set(False)
+    
+    def open(self):
+        self._solenoid.set(True)
