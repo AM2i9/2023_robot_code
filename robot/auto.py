@@ -13,15 +13,15 @@ def run_auto(auto, robot):
     global Robot
     Robot = robot
 
-    def _run():
+    def _run_auto():
         if type(auto) == list:
-            sequence(*auto)
+            sequence(*auto).execute()
         elif auto is Auto:
             auto.execute()
         else:
-            auto()
+            print("That's not an Auto!")
     
-    threading.Thread(target=_run).start()
+    threading.Thread(target=_run_auto).start()
 
 def auto(func):
     def wrapper(*args, **kwargs):
@@ -30,7 +30,7 @@ def auto(func):
 
 class Auto:
 
-    def __init__(self, func, args, kwargs):
+    def __init__(self, func, args=[], kwargs={}):
         self.func = func
         self.args = args
         self.kwargs = kwargs
@@ -67,8 +67,12 @@ def sequence(*autos: List[Callable[..., Auto]]):
     Run autos in a sequence
     """
 
-    for auto in autos:
-        auto.execute()
+    def _sequence():
+        print("seq")
+        for auto in autos:
+            auto.execute()
+    
+    return Auto(_sequence)
 
 def parallel(*autos: List[Callable[..., Auto]], deadline: Callable[..., Auto] = None):
     """
@@ -80,29 +84,41 @@ def parallel(*autos: List[Callable[..., Auto]], deadline: Callable[..., Auto] = 
     exits.
     """
 
-    procs = [
-        multiprocessing.Process(target=auto.execute)
-        for auto in autos
-    ]
+    def _parallel():
+        print("parallel")
+        procs = [
+            multiprocessing.Process(target=auto.execute)
+            for auto in autos
+        ]
 
-    for proc in procs:
-        proc.start()
-    
-    if deadline is not None:
-        deadln = multiprocessing.Process(target=deadline.execute)
-        deadln.start()
-        deadln.join()
-    else:
         for proc in procs:
-            proc.join()
+            proc.start()
+        
+        if deadline is not None:
+            deadln = multiprocessing.Process(target=deadline.execute)
+            deadln.start()
+            deadln.join()
+        else:
+            for proc in procs:
+                proc.join()
 
-    for proc in procs:
-        if proc.is_alive():
-            proc.terminate()
-            proc.join()
+        for proc in procs:
+            if proc.is_alive():
+                proc.terminate()
+                proc.join()
+    
+    return Auto(_parallel)
 
 COMMAND = [
-    place_high(),
-    wait(3),
-    place_high(),
+    parallel(
+        place_high(),
+        wait(5)
+    ),
+    parallel(
+        sequence(
+            wait(5),
+            Auto(lambda: print("test!"))
+        ),
+        deadline=wait(3)
+    ),
 ]
