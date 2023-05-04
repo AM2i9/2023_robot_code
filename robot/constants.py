@@ -2,6 +2,14 @@ from math import pi
 
 from wpimath.kinematics import DifferentialDriveKinematics
 
+# quick function convert inches to meters
+in2m = lambda x: x * 0.0254
+
+# ----- FIELD -----
+
+FIELD_LENGTH = in2m(54)
+FIELD_WIDTH = in2m(32)
+
 # ----- CLAW -----
 
 CLAW_CHANNEL = 6
@@ -16,11 +24,11 @@ DRIVE_RB_MOTOR = 12
 DRIVE_RF_MOTOR = 13
 
 DRIVE_ENC_CPR = 2048
-DRIVE_WHEEL_DIAMETER = 6 * 0.0254
+DRIVE_WHEEL_DIAMETER = in2m(6)
 DRIVE_ENC_DPR = DRIVE_WHEEL_DIAMETER * pi
-DRIVE_GEARBOX = (34/40) * (14/50)
+DRIVE_GEARBOX = (34 / 40) * (14 / 50)
 
-DRIVE_TRACK_WIDTH = 21 * 0.0254
+DRIVE_TRACK_WIDTH = in2m(21)
 DRIVE_KINEMATICS = DifferentialDriveKinematics(DRIVE_TRACK_WIDTH)
 
 DRIVE_MAX_SPEED = 6

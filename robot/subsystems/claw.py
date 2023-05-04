@@ -1,8 +1,8 @@
 from wpilib import Solenoid, PneumaticsModuleType, DigitalInput
 from robot.constants import *
 
-class Claw:
 
+class Claw:
     _solenoid = Solenoid(PneumaticsModuleType.CTREPCM, CLAW_CHANNEL)
     _photosensor = DigitalInput(CLAW_PHOTO)
 
@@ -11,4 +11,3 @@ class Claw:
 
     def toggle(self):
         self._solenoid.toggle()
-

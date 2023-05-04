@@ -19,10 +19,11 @@ class Robot(TimedRobot):
         pass
 
     def teleopPeriodic(self):
-
         forward = wpimath.applyDeadband(self.driver.getLeftY(), 0.2) * DRIVE_MAX_SPEED
-        rotation = wpimath.applyDeadband(self.driver.getRightX(), 0.2) * DRIVE_MAX_ROT_SPEED
-        print(forward, rotation)
+        rotation = (
+            wpimath.applyDeadband(self.driver.getRightX(), 0.2) * DRIVE_MAX_ROT_SPEED
+        )
+        
         self.drivetrain.arcade_drive(forward, rotation)
 
         if self.aux.getBButtonPressed():
@@ -41,6 +42,7 @@ class Robot(TimedRobot):
             self.claw.toggle()
 
         self.arm.periodic()
+        self.drivetrain.periodic()
 
     def autoInit(self):
         pass
